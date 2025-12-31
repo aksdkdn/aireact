@@ -22,22 +22,40 @@ jobs:
           npm ci
           npm run build
 
-      - name: Upload build to EC2
+      # ===============================
+      # dist → Nginx 서버로 전송 (Bastion 경유)
+      # ===============================
+      - name: Upload build to Nginx Server
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
+          host: 10.250.1.240
+          username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
+
+          proxy_host: ${{ secrets.BASTION_HOST }}
+          proxy_username: ubuntu
+          proxy_key: ${{ secrets.EC2_SSH_KEY }}
+
           source: "dist/*"
           target: "/tmp/frontend"
 
-      - name: Deploy on EC2
+      # ===============================
+      # Nginx 서버에서 배포 명령 실행
+      # ===============================
+      - name: Deploy on Nginx Server
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
+          host: 10.250.1.240
+          username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
+
+          proxy_host: ${{ secrets.BASTION_HOST }}
+          proxy_username: ubuntu
+          proxy_key: ${{ secrets.EC2_SSH_KEY }}
+
           script: |
+            sudo mkdir -p /usr/share/nginx/html
             sudo rm -rf /usr/share/nginx/html/*
             sudo cp -r /tmp/frontend/* /usr/share/nginx/html/
             sudo systemctl reload nginx
+
