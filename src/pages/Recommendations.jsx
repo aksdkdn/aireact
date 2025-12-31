@@ -51,7 +51,7 @@ const Recommendations = () => {
             cursor: "pointer",
           }}
         >
-          추천 조회
+          호호호홓호 조회
         </button>
       </div>
 
