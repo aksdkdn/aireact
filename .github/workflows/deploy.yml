@@ -50,8 +50,8 @@ jobs:
             ${{ secrets.BASTION_USER }}@${{ secrets.BASTION_HOST }} "
               rsync -avz ~/dist/ nginx2a:/home/ubuntu/dist/ &&
               ssh nginx2a '
-                sudo rm -rf /var/www/react/* &&
-                sudo cp -r /home/ubuntu/dist/* /var/www/react/ &&
-                sudo systemctl reload nginx
+                sudo rm -rf /usr/share/nginx/html/* &&
+                sudo cp -r /home/ubuntu/dist/* /usr/share/nginx/html/ &&
+                sudo systemctl reload nginx 
               '
             "
