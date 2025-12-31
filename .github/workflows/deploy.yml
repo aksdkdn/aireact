@@ -54,4 +54,10 @@ jobs:
                 sudo cp -r /home/ubuntu/dist/* /usr/share/nginx/html/ &&
                 sudo systemctl reload nginx 
               '
+              ssh nginx2c '
+                sudo rm -rf /usr/share/nginx/html/* &&
+                sudo cp -r /home/ubuntu/dist/* /usr/share/nginx/html/ &&
+                sudo systemctl reload nginx 
+              '  
+              
             "
